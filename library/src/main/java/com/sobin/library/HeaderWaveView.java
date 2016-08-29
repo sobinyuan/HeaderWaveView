@@ -187,7 +187,7 @@ public class HeaderWaveView extends View {
         for (int beginX = 0; beginX < endX; beginX++) {
             canvas.drawLine(beginX, waveY[(beginX + wave2Shift) % endX], beginX, -1, wavePaint);
         }
-        
+
         // use the bitamp to create the shader
         mWaveShader = new BitmapShader(bitmap, Shader.TileMode.REPEAT, Shader.TileMode.CLAMP);
         mViewPaint.setShader(mWaveShader);
