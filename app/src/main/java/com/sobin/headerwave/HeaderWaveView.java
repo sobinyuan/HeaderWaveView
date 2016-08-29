@@ -93,11 +93,9 @@ public class HeaderWaveView extends View {
     }
 
     public float getSinHeight() {
-
-        return (float) (getHeight() * mWaterLevelRatio + mAmplitudeRatio / DEFAULT_AMPLITUDE_RATIO * mDefaultAmplitude * Math.sin(mWaveLengthRatio / DEFAULT_WAVE_LENGTH_RATIO * (mWaveShiftRatio * getWidth() * mDefaultAngularFrequency)));
-//        if (mSinHeight==null)
-//            return 0.0f;
-//        return mSinHeight[(int)(mWaveShiftRatio*getWidth())];
+        //sin函数的height
+        return (float) (getHeight() * mWaterLevelRatio
+                + mAmplitudeRatio / DEFAULT_AMPLITUDE_RATIO * mDefaultAmplitude * Math.sin(mWaveShiftRatio * getWidth() * mDefaultAngularFrequency));
     }
 
     /**
@@ -130,19 +128,7 @@ public class HeaderWaveView extends View {
         }
     }
 
-    public float getWaveLengthRatio() {
-        return mWaveLengthRatio;
-    }
 
-    /**
-     * Set horizontal size of wave according to <code>waveLengthRatio</code>
-     *
-     * @param waveLengthRatio Default to be 1.
-     *                        <br/>Ratio of wave length to width of WaveView.
-     */
-    public void setWaveLengthRatio(float waveLengthRatio) {
-        mWaveLengthRatio = waveLengthRatio;
-    }
 
     public boolean isShowWave() {
         return mShowWave;
@@ -157,10 +143,6 @@ public class HeaderWaveView extends View {
         mBehindWaveColor = behindWaveColor;
         mFrontWaveColor = frontWaveColor;
 
-        // need to recreate shader when color changed
-//        mWaveShader = null;
-//        createShader();
-//        invalidate();
     }
 
 
@@ -213,7 +195,6 @@ public class HeaderWaveView extends View {
             canvas.drawLine(beginX, waveY[(beginX + wave2Shift) % endX], beginX, -1, wavePaint2);
             canvas.drawLine(beginX, waveY[beginX], beginX, -1, wavePaint);
         }
-
 
 
         // use the bitamp to create the shader

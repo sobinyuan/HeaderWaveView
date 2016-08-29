@@ -8,6 +8,7 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.os.Handler;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
@@ -19,19 +20,16 @@ public class HeaderWaveHelper {
     private HeaderWaveView mHeaderWaveView;
     private View mFloatView;
     private AnimatorSet mAnimatorSet;
-    private float waterLevelAnimF, amplitudeAnimF;
+    private ObjectAnimator mAmplitudeAnim, amplitudeChangeAnim;
+    private Handler mHandler = new Handler();
+    private boolean mHasCancel = false;
+    private boolean mHasStart = false;
+    private boolean mIsFirst = false;
 
     public HeaderWaveHelper(HeaderWaveView HeaderWaveView, View view) {
         mHeaderWaveView = HeaderWaveView;
         mFloatView = view;
         initAnimation();
-    }
-
-    public void start() {
-        mHeaderWaveView.setShowWave(true);
-        if (mAnimatorSet != null) {
-            mAnimatorSet.start();
-        }
     }
 
     private void initAnimation() {
@@ -48,12 +46,12 @@ public class HeaderWaveHelper {
 
         // amplitude animation.
         // wave grows big then grows small, repeatedly
-        final ObjectAnimator amplitudeAnim = ObjectAnimator.ofFloat(
+        mAmplitudeAnim = ObjectAnimator.ofFloat(
                 mHeaderWaveView, "amplitudeRatio", 0.05f, 0.05f);
-        amplitudeAnim.setRepeatCount(ValueAnimator.INFINITE);
-        amplitudeAnim.setRepeatMode(ValueAnimator.REVERSE);
-        amplitudeAnim.setDuration(5000);
-        amplitudeAnim.setInterpolator(new LinearInterpolator());
+        mAmplitudeAnim.setRepeatCount(ValueAnimator.INFINITE);
+        mAmplitudeAnim.setRepeatMode(ValueAnimator.REVERSE);
+        mAmplitudeAnim.setDuration(5000);
+        mAmplitudeAnim.setInterpolator(new LinearInterpolator());
 
 
         // horizontal animation.
@@ -68,9 +66,9 @@ public class HeaderWaveHelper {
         waveShiftAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
-
-                float value = mHeaderWaveView.getSinHeight()-mFloatView.getMeasuredHeight();
-                mFloatView.setRotation(-value);
+                //获取sin函数的height，更新mFloatView
+                float value = mHeaderWaveView.getSinHeight() - mFloatView.getMeasuredHeight();
+                mFloatView.setRotation(-value * 0.92f);
                 mFloatView.setTranslationY(value);
                 mFloatView.invalidate();
             }
@@ -78,7 +76,7 @@ public class HeaderWaveHelper {
 
         animators.add(waveShiftAnim);
 
-        animators.add(amplitudeAnim);
+        animators.add(mAmplitudeAnim);
 
         animators.add(waterLevelAnim);
 
@@ -87,10 +85,51 @@ public class HeaderWaveHelper {
         mAnimatorSet.playTogether(animators);
     }
 
-    public void cancel() {
-        if (mAnimatorSet != null) {
-//            mAnimatorSet.cancel();
-            mAnimatorSet.end();
+    public void start() {
+        mHeaderWaveView.setShowWave(true);
+        if (mAnimatorSet != null && !mHasStart) {
+            mHasStart = true;
+            mHasCancel = false;
+            if (amplitudeChangeAnim != null) {
+                amplitudeChangeAnim = ObjectAnimator.ofFloat(
+                        mHeaderWaveView, "amplitudeRatio", 0.00001f, 0.05f);
+                amplitudeChangeAnim.setDuration(1000);
+                amplitudeChangeAnim.start();
+            }
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (!mIsFirst) {
+                        mAnimatorSet.start();
+                        mIsFirst = true;
+                    }
+
+                }
+            }, 1000);
+
         }
+    }
+
+    public void cancel() {
+        if (mAnimatorSet != null && !mHasCancel) {
+            mHasCancel = true;
+            mHasStart = false;
+            mAmplitudeAnim.cancel();
+            amplitudeChangeAnim = ObjectAnimator.ofFloat(
+                    mHeaderWaveView, "amplitudeRatio", 0.05f, 0.00001f);
+            amplitudeChangeAnim.setDuration(1000);
+            amplitudeChangeAnim.start();
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+//                    mAnimatorSet.cancel();
+                    if (mFloatView.getAnimation() != null) {
+                        mFloatView.getAnimation().cancel();
+                    }
+                }
+            }, 1000);
+        }
+
+
     }
 }
