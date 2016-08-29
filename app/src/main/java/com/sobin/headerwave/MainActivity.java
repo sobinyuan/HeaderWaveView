@@ -7,6 +7,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 
+import com.sobin.library.HeaderWaveHelper;
+import com.sobin.library.HeaderWaveView;
+
 public class MainActivity extends AppCompatActivity {
 
     private HeaderWaveHelper mHeaderWaveHelper;
@@ -20,11 +23,7 @@ public class MainActivity extends AppCompatActivity {
         ImageView imageView = (ImageView) findViewById(R.id.imageView);
         final ScrollView mScrollView = (ScrollView) findViewById(R.id.sv);
 
-
-        waveView.setWaveColor(
-                Color.parseColor("#80FC7A8C"),
-                Color.parseColor("#40FB3D53"));
-        mHeaderWaveHelper = new HeaderWaveHelper(waveView, imageView);
+        mHeaderWaveHelper = new HeaderWaveHelper(waveView, Color.parseColor("#80FC7A8C"),Color.parseColor("#40FB3D53"),imageView);
 
         //SDK API23以下请自行继承ScrollView实现该方法。
         mScrollView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
