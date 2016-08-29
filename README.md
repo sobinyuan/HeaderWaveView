@@ -15,6 +15,7 @@
 ```
 //behindWaveColor 波浪背后颜色
 //frontWaveColor 波浪前面颜色
+//view 随波浪浮动的view
 new HeaderWaveHelper(HeaderWaveView HeaderWaveView, int behindWaveColor, int frontWaveColor, View view)
 ```
 

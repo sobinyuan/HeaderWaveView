@@ -50,7 +50,4 @@ captures/
 *.jks
 >>>>>>> 0a17682025b87324ddbd09c310dbbc659560e564
 .idea/vcs.xml
-app/libs/
-library/libs/
-library/src/main/java/
-library/src/main/res/drawable/
+
