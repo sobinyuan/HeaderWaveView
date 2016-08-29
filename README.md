@@ -36,5 +36,5 @@ setDefaultAmplitudeRatio(float defaultAmplitudeRatioF,float defaultAmplitudeRati
 setDefaultFloatViewRotation(float defaultFloatViewRotation)
 ```
 
-### 参考
+### Reference
 参考[WaveView](https://github.com/gelitenight/WaveView)实现
