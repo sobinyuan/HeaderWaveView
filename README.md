@@ -4,7 +4,7 @@
 
 ###Screenshot：
 
-![img](/Users/yuanshuobin/StudioProjects/HeaderWave/demo.gif)
+![img](https://github.com/sobinyuan/HeaderWaveView/blob/master/demo.gif)
 
 ###How to Use：
 
